@@ -108,7 +108,7 @@ public:
             cout << (isLeft ? "├──" : "└──" );
 
             // print the value of the node
-            cout << node->player << node->info << endl;
+            cout << node->player << endl;
 
             // enter the next tree level - left and right branch
             printBT( prefix + (isLeft ? "│      " : "        "), node->left_son, true);
@@ -172,7 +172,7 @@ Players_Ranked_LevelsSum & Players_Ranked_LevelsSum ::operator=(const Players_Ra
     }
     else
     {
-        node_l * temp = nullptr;
+        temp = nullptr;
     }
 
     destroyTree(root);
@@ -234,22 +234,27 @@ int Players_Ranked_LevelsSum ::addNode(const Player key, const PlayerInfo info) 
 int Players_Ranked_LevelsSum ::removeNode(Player key) {
     if (root == nullptr)
     {
+        // cout <<"root is null" << endl;
         return -1;
     }
-    if(bstSearch(root, key) == nullptr) {
-        return -1; // player not found
-    }
+    // cout<<bstRemoveNode(this, key)<<endl;
+    // if(bstSearch(root, key) == nullptr) {
+    //     cout <<"not found" << endl;
+    //     return -1; // player not found
+    // }
 
-    updateInfo_Remove(root, key);
+    // updateInfo_Remove(root, key);
 
     node_l * father_of_deleted = bstRemoveNode(this, key);
     if (father_of_deleted == nullptr && root != nullptr) //the key was not found
     {
+        // cout << "3a" <<endl;
         return -1;
     }
 
-    // cout << father_of_deleted->player << endl;
-    updateInfo_node(father_of_deleted);
+    // updateInfo_Remove(root, key);
+
+    // updateInfo_node(father_of_deleted);
 
     // balancing: rotations     
     bool is_current_left_of_next;
@@ -958,7 +963,7 @@ void Players_Ranked_LevelsSum ::merge(node_l ** dst, node_l ** arr1, int length_
 
  
 void Players_Ranked_LevelsSum ::buildPerfectBinaryTree(node_l * treeRoot, int height) {
-    if(height == 0) {
+    if(height <= 0) {
         return;
     }
 

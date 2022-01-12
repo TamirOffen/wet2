@@ -5,24 +5,24 @@
 #include <iostream>
 
 
-typedef enum {
-    ALLOCATION_ERROR = 0,
-    INVALID_INPUT,
-    SUCCESS,
-    FAILURE,
-    ALREADY_EXIST,
-    NOT_FOUND
-} StatusType;
+// typedef enum {
+//     ALLOCATION_ERROR = 0,
+//     INVALID_INPUT,
+//     SUCCESS,
+//     FAILURE,
+//     ALREADY_EXIST,
+//     NOT_FOUND
+// } StatusType;
 
 template<class T>
 struct node_hash
 {   
     int key;
     T value;
-    node_hash<T> * next = nullptr;
+    node_hash<T> * next;
 
-    node_hash(int k, T v) : key(k), value(v) {};
-    node_hash() : key(-1) {};
+    node_hash(int k, T v) : key(k), value(v), next(nullptr) {};
+    node_hash() : key(-1), next(nullptr) {};
 };
 
 template<class T>
@@ -32,9 +32,10 @@ class HashTable
     HashTable(int size);
     ~HashTable();
     
-    StatusType remove(int key);
-    int find(int key);
-    StatusType insert(int key, T value);
+    void remove(int key);
+    T find(int key);
+    void insert(int key, T value);
+    bool isInTable(int key);
 
     private:
     int size;
@@ -75,7 +76,7 @@ HashTable<T>::~HashTable()
 
 
 template<class T>
-StatusType HashTable<T>::insert(int key, T value)
+void HashTable<T>::insert(int key, T value)
 {
     int new_key = key%size;
     node_hash<T> * it = table[new_key];
@@ -84,7 +85,7 @@ StatusType HashTable<T>::insert(int key, T value)
         table[new_key]->key = key;
         table[new_key]->value = value;
         table[new_key]->next = nullptr;
-        return SUCCESS;
+        return;
     }
     node_hash<T> * n = new node_hash<T>(key, value);
     while(it->next) // search for key in table[new_key]
@@ -92,23 +93,23 @@ StatusType HashTable<T>::insert(int key, T value)
         if(it->key == key)\
         {   
             delete n;
-            return ALREADY_EXIST;
+            return;
         }
         it = it->next;
     }
     if(it->key == key)
     {   
         delete n;
-        return ALREADY_EXIST;
+        return;
     }
     it->next = n;
-    return SUCCESS;
+    return;
 }
 
 
 
 template<class T>
-StatusType HashTable<T>::remove(int key)
+void HashTable<T>::remove(int key)
 {
     int new_key = key%size;
     node_hash<T> * it = table[new_key];
@@ -118,12 +119,12 @@ StatusType HashTable<T>::remove(int key)
         if(!it->next) // if key is the only node in table[new_key]
         {
             table[new_key]->key = -1;
-            return SUCCESS;
+            return;
         }
         table[new_key] = table[new_key]->next;
         //to_delete = it;
         delete it;
-        return SUCCESS;
+        return;
     }
     while(it->next) // search for key in table[new_key]
     {
@@ -136,25 +137,41 @@ StatusType HashTable<T>::remove(int key)
         it = it->next;
     }
     if(!to_delete)
-        return NOT_FOUND;
+        return;
     delete to_delete;
-    return SUCCESS;
+    return;
 }
 
 
-// return 1 if found key and -1 otherwise
+// return true if found key and false otherwise
 template<class T>
-int HashTable<T>::find(int key)
+T HashTable<T>::find(int key)
 {
     int new_key = key%size;
     node_hash<T> * it = table[new_key];
     while(it)
     {
-        if(it->key == key)
-            return 1;
+        if(it->key == key) {
+            return it->value;
+        }
         it = it->next;
     }
-    return -1;
+    T dummy_var;
+    return dummy_var;
+}
+
+template<class T>
+bool HashTable<T>::isInTable(int key) {
+    int new_key = key%size;
+    node_hash<T> * it = table[new_key];
+    while(it)
+    {
+        if(it->key == key) {
+            return true;
+        }
+        it = it->next;
+    }
+    return false;
 }
 
 #endif

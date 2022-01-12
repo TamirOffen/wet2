@@ -36,9 +36,15 @@ public:
     int getScore() {
         return score;
     }
+    int getGroupID() {
+        return groupID;
+    }
+    int getPlayerID() {
+        return playerID;
+    }
     // compare funcs:
     friend bool operator==(const Player& lhs, const Player& rhs) {
-        return lhs.playerID == rhs.playerID;
+        return lhs.level == rhs.level && lhs.playerID == rhs.playerID;
     }
     friend bool operator<(const Player& lhs, const Player& rhs) {
         if(lhs.level < rhs.level) return true;
@@ -58,7 +64,7 @@ public:
     friend ostream& operator<<(ostream& os, Player const & player) {
         // return os << "(" << player.playerID << "," << player.groupID << "," << player.level << "," << player.score << ")" << endl;
         // return os << "(" << player.playerID << "," << player.level << ")";
-        return os << "(" << player.playerID << "," << player.score << ")";
+        return os << "(pID: " << player.playerID << ", score: " << player.score << ", level " << player.level << ")";
     }
 
 };

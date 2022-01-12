@@ -118,7 +118,7 @@ public:
             cout << (isLeft ? "├──" : "└──" );
 
             // print the value of the node
-            cout << node->player << node->info << endl;
+            cout << node->player << endl;
 
             // enter the next tree level - left and right branch
             printBT( prefix + (isLeft ? "│      " : "        "), node->left_son, true);
@@ -186,7 +186,7 @@ Players_Ranked_Score & Players_Ranked_Score ::operator=(const Players_Ranked_Sco
     }
     else
     {
-        node_s * temp = nullptr;
+        temp = nullptr;
     }
 
     destroyTree(root);
@@ -250,11 +250,11 @@ int Players_Ranked_Score ::removeNode(Player key) {
     {
         return -1;
     }
-    if(bstSearch(root, key) == nullptr) {
-        return -1; // player not found
-    }
+    // if(bstSearch(root, key) == nullptr) {
+    //     return -1; // player not found
+    // }
 
-    updateInfo_Remove(root, key);
+    
 
     node_s * father_of_deleted = bstRemoveNode(this, key);
     if (father_of_deleted == nullptr && root != nullptr) //the key was not found
@@ -262,8 +262,9 @@ int Players_Ranked_Score ::removeNode(Player key) {
         return -1;
     }
 
-    // cout << father_of_deleted->player << endl;
-    updateInfo_node(father_of_deleted);
+    // updateInfo_Remove(root, key);
+
+    // updateInfo_node(father_of_deleted);
 
     // balancing: rotations     
     bool is_current_left_of_next;
@@ -1016,7 +1017,7 @@ void Players_Ranked_Score ::merge(node_s ** dst, node_s ** arr1, int length_arr1
 
  
 void Players_Ranked_Score ::buildPerfectBinaryTree(node_s * treeRoot, int height) {
-    if(height == 0) {
+    if(height <= 0) {
         return;
     }
 
